@@ -1,0 +1,30 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  background-color: #f8f9fa;
+}
+
+/* Sidebar should take 25% of the width */
+.sidebar {
+  width: 25%;
+  max-width: 300px;
+  background: white;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+}
+
+/* RecipeDetails takes remaining space */
+.recipe-details {
+  flex: 1;
+  padding: 20px;
+  background: white;
+  overflow-y: auto;
+}
