@@ -1,4 +1,4 @@
-.sidebar {
+/* .sidebar {
     width: 300px;
     background: #f1f5f9;
     padding: 20px;
@@ -19,4 +19,122 @@
     border-radius: 50%;
     margin-right: 10px;
   }
-  
+   */
+
+/* Sidebar styles */
+.sidebar {
+  width: 300px; /* Default width for larger screens */
+  max-width: 100%; /* Prevent sidebar from exceeding screen width */
+  background: #f1f5f9;
+  padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  height: 100vh; /* Full height of the viewport */
+  box-sizing: border-box; /* Include padding in height/width calculations */
+}
+
+/* Recipe list styles */
+.recipe-list {
+  min-height: 300px; /* Consistent height for the recipe list */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Recipe item styles */
+.recipe-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.recipe-item img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.recipe-item p {
+  font-size: 1rem;
+  color: #333;
+  margin: 0;
+}
+
+/* Pagination styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.pagination-page {
+  font-size: 1rem; /* Default font size */
+  font-weight: bold;
+  color: #0074cc;
+}
+
+.pagination-arrow {
+  background: #eaf4fe;
+  color: #0074cc;
+  border: 1px solid #0074cc;
+  padding: 8px 16px; /* Default padding */
+  border-radius: 25px;
+  font-size: 0.9rem; /* Default font size */
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pagination-arrow:hover {
+  background: #0074cc;
+  color: white;
+}
+
+.pagination-arrow:disabled {
+  background: #f1f5f9;
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Responsive adjustments for small screens */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%; /* Full width for smaller screens */
+    padding: 15px; /* Adjust padding */
+  }
+
+  .recipe-item {
+    padding: 8px; /* Reduce padding for items */
+  }
+
+  .recipe-item img {
+    width: 60px; /* Slightly larger icons */
+    height: 60px;
+    margin-right: 0; /* Remove extra spacing */
+    margin-left: -12px;
+  }
+
+  .recipe-item p {
+    display: none; /* Hide recipe titles on small screens */
+  }
+
+  .pagination {
+    gap: 10px; /* Reduce spacing between elements */
+    margin-top: 15px; /* Adjust margin */
+  }
+
+  .pagination-page {
+    font-size: 0.8rem; /* Smaller font size for page number */
+  }
+
+  .pagination-arrow {
+    padding: 5px 10px; /* Reduce padding for buttons */
+    font-size: 0.75rem; /* Smaller font size for arrows */
+    border-radius: 20px; /* Adjust radius for smaller buttons */
+  }
+}
