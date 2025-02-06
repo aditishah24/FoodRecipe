@@ -41,14 +41,8 @@ import React, { useState } from "react";
 import "../css/RecipeDetails.css";
 import { FiBookmark, FiPlus, FiMinus } from "react-icons/fi";
 
-const RecipeDetails = ({ recipe }) => {
+const RecipeDetails = ({ recipe, onBookmark, bookmarks }) => {
   const [servings, setServings] = useState(recipe ? recipe.servings : 1);
-
-  const adjustServings = (adjustment) => {
-    if (servings + adjustment > 0) {
-      setServings(servings + adjustment);
-    }
-  };
 
   if (!recipe) {
     return (
@@ -58,14 +52,12 @@ const RecipeDetails = ({ recipe }) => {
     );
   }
 
+  const isBookmarked = bookmarks.some((r) => r.id === recipe.id);
+
   return (
     <div className="recipe-details">
       <div className="recipe-header">
-        <img
-          className="recipe-image"
-          src={recipe.image_url}
-          alt={recipe.title}
-        />
+        <img className="recipe-image" src={recipe.image_url} alt={recipe.title} />
         <h2 className="recipe-title">{recipe.title}</h2>
       </div>
 
@@ -73,16 +65,16 @@ const RecipeDetails = ({ recipe }) => {
         <span className="info-item">⏳ {recipe.cooking_time} minutes</span>
         <span className="info-item servings">
           🍽 Servings:
-          <button className="adjust-btn" onClick={() => adjustServings(-1)}>
+          <button className="adjust-btn" onClick={() => setServings(servings - 1)}>
             <FiMinus />
           </button>
           <span className="servings-value">{servings}</span>
-          <button className="adjust-btn" onClick={() => adjustServings(1)}>
+          <button className="adjust-btn" onClick={() => setServings(servings + 1)}>
             <FiPlus />
           </button>
         </span>
-        <button className="bookmark-btn">
-          <FiBookmark /> Bookmark
+        <button className={`bookmark-btn ${isBookmarked ? "bookmarked" : ""}`} onClick={() => onBookmark(recipe)}>
+          <FiBookmark /> {isBookmarked ? "Bookmarked" : "Bookmark"}
         </button>
       </div>
 
@@ -100,16 +92,10 @@ const RecipeDetails = ({ recipe }) => {
       <div className="instructions-section">
         <h3 className="section-title">How to Cook It</h3>
         <p className="instructions-text">
-          This recipe was carefully designed by{" "}
-          <strong>{recipe.publisher}</strong>. Check out directions at their
-          website.
+          This recipe was carefully designed by <strong>{recipe.publisher}</strong>.
+          Check out directions at their website.
         </p>
-        <a
-          href={recipe.source_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="directions-btn"
-        >
+        <a href={recipe.source_url} target="_blank" rel="noopener noreferrer" className="directions-btn">
           Directions
         </a>
       </div>
