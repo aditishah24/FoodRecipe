@@ -99,7 +99,7 @@ const Navbar = ({ onSearch, onAddRecipe, query, setQuery, bookmarks }) => {
         </div>
       )}
 
-      {/* Add Recipe Modal */}
+      {/* Recipe Modal  */}
       {showAddRecipe && <AddRecipe onClose={() => setShowAddRecipe(false)} onAddRecipe={onAddRecipe} />}
     </header>
   );
