@@ -1,45 +1,3 @@
-// import React, { useState } from "react";
-// import axios from "axios";
-// import Header from "./components/Navbar";
-// import Sidebar from "./components/Sidebar";
-// import RecipeDetails from "./components/RecipeDetails";
-// import "./App.css";
-
-// const App = () => {
-//   const [recipes, setRecipes] = useState([]);
-//   const [selectedRecipe, setSelectedRecipe] = useState(null);
-
-//   const fetchRecipes = async (query) => {
-//     try {
-//       const response = await axios.get(`https://forkify-api.herokuapp.com/api/v2/recipes?search=${query}`);
-//       setRecipes(response.data.data.recipes);
-//     } catch (error) {
-//       console.error("Error fetching recipes:", error);
-//     }
-//   };
-
-//   const fetchRecipeDetails = async (id) => {
-//     try {
-//       const response = await axios.get(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`);
-//       setSelectedRecipe(response.data.data.recipe);
-//     } catch (error) {
-//       console.error("Error fetching recipe details:", error);
-//     }
-//   };
-
-//   return (
-//     <div className="app">
-//       <Header onSearch={fetchRecipes} />
-//       <div className="main-content">
-//         <Sidebar recipes={recipes} onSelectRecipe={fetchRecipeDetails} />
-//         <RecipeDetails recipe={selectedRecipe} />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default App;
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "./components/Navbar";
@@ -53,26 +11,49 @@ const App = () => {
   const [query, setQuery] = useState("");
   const [bookmarkedRecipes, setBookmarkedRecipes] = useState([]);
 
-  // Reset bookmarks to zero on app restart
+  // Load saved recipes from localStorage on app load
   useEffect(() => {
-    // Reset bookmarks to empty array when app restarts
-    localStorage.setItem("bookmarkedRecipes", JSON.stringify([]));
-    setBookmarkedRecipes([]); // Set state to an empty array
+    const storedRecipes = JSON.parse(localStorage.getItem("recipes")) || [];
+    setRecipes(storedRecipes);
   }, []);
 
-  // Function to fetch recipes
+  // Save recipes to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("recipes", JSON.stringify(recipes));
+  }, [recipes]);
+
+  // Fetch recipes from API + include stored recipes
   const fetchRecipes = async (searchQuery) => {
     try {
+      const storedRecipes = JSON.parse(localStorage.getItem("recipes")) || [];
+
+      // Filter stored recipes that match search query
+      const filteredStoredRecipes = storedRecipes.filter(recipe =>
+        recipe.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      // Fetch from API
       const response = await axios.get(
         `https://forkify-api.herokuapp.com/api/v2/recipes?search=${searchQuery}`
       );
-      setRecipes(response.data.data.recipes);
+
+      // Avoid duplicate recipes when merging
+      const apiRecipes = response.data.data.recipes;
+      const combinedRecipes = [...filteredStoredRecipes];
+
+      apiRecipes.forEach(apiRecipe => {
+        if (!storedRecipes.some(storedRecipe => storedRecipe.id === apiRecipe.id)) {
+          combinedRecipes.push(apiRecipe);
+        }
+      });
+
+      setRecipes(combinedRecipes);
     } catch (error) {
       console.error("Error fetching recipes:", error);
     }
   };
 
-  // Function to fetch recipe details
+  // Fetch details of a selected recipe
   const fetchRecipeDetails = async (id) => {
     try {
       const response = await axios.get(
@@ -84,14 +65,44 @@ const App = () => {
     }
   };
 
-  // Function to handle bookmarking
+  // Handle adding a new recipe + store it properly
+  const handleAddRecipe = (newRecipe) => {
+    const formattedRecipe = {
+      id: `custom-${Date.now()}`,
+      title: newRecipe.title,
+      source_url: newRecipe.url,
+      image_url: newRecipe.imageUrl,
+      publisher: newRecipe.publisher,
+      cooking_time: newRecipe.prepTime,
+      servings: newRecipe.servings,
+      ingredients: newRecipe.ingredients.map((ing) => {
+        const parts = ing.split(",");
+        return { quantity: parts[0] || null, unit: parts[1] || "", description: parts[2] || "" };
+      }),
+    };
+
+    // Check if recipe already exists
+    const storedRecipes = JSON.parse(localStorage.getItem("recipes")) || [];
+    if (storedRecipes.some(recipe => recipe.title === formattedRecipe.title)) {
+      console.warn("Recipe already exists, skipping duplicate storage.");
+      return;
+    }
+
+    const updatedRecipes = [formattedRecipe, ...storedRecipes];
+    setRecipes(updatedRecipes);
+    setSelectedRecipe(formattedRecipe);
+
+    localStorage.setItem("recipes", JSON.stringify(updatedRecipes));
+  };
+
+  // Handle bookmarking recipes
   const handleBookmark = (recipe) => {
     const updatedBookmarks = bookmarkedRecipes.some((r) => r.id === recipe.id)
-      ? bookmarkedRecipes.filter((r) => r.id !== recipe.id) // Remove if already bookmarked
-      : [...bookmarkedRecipes, recipe]; // Add if not bookmarked
+      ? bookmarkedRecipes.filter((r) => r.id !== recipe.id)
+      : [...bookmarkedRecipes, recipe];
 
     setBookmarkedRecipes(updatedBookmarks);
-    localStorage.setItem("bookmarkedRecipes", JSON.stringify(updatedBookmarks)); // Save to localStorage
+    localStorage.setItem("bookmarkedRecipes", JSON.stringify(updatedBookmarks));
   };
 
   return (
@@ -101,12 +112,14 @@ const App = () => {
         setQuery={setQuery} 
         query={query} 
         bookmarks={bookmarkedRecipes} 
+        onAddRecipe={handleAddRecipe} 
       />
       
       <div className="main-content">
         <Sidebar 
           recipes={recipes} 
           onSelectRecipe={fetchRecipeDetails} 
+          searchTerm={query}
         />
         <RecipeDetails 
           recipe={selectedRecipe} 

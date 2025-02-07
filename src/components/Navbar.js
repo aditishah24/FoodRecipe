@@ -1,51 +1,23 @@
-// import React, { useState } from "react";
-// import "../css/Navbar.css";
-
-// const Navbar = ({ onSearch }) => {
-//   const [query, setQuery] = useState("");
-
-//   const handleSearch = (e) => {
-//     e.preventDefault();
-//     if (query.trim()) {
-//       onSearch(query);
-//     }
-//   };
-
-//   return (
-//     <header className="header">
-//       <h1 className="logo">CraveHub</h1>
-//       <form onSubmit={handleSearch}>
-//         <input
-//           type="text"
-//           placeholder="Search over 1,000,000 recipes..."
-//           value={query}
-//           onChange={(e) => setQuery(e.target.value)}
-//         />
-//         <button type="submit">Search</button>
-//       </form>
-//     </header>
-//   );
-// };
-
-// export default Navbar;
-
-
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faBookmark, faEdit, faTimes } from "@fortawesome/free-solid-svg-icons";
-import AddRecipe from "./AddRecipe"; // Import the AddRecipe modal
+import AddRecipe from "./AddRecipe";
 import "../css/Navbar.css";
 
 const Navbar = ({ onSearch, onAddRecipe, query, setQuery, bookmarks }) => {
   const [showAddRecipe, setShowAddRecipe] = useState(false);
   const [showBookmarks, setShowBookmarks] = useState(false);
 
-  // Function to handle search
   const handleSearch = (e) => {
     e.preventDefault();
     if (query.trim()) {
       onSearch(query);
     }
+  };
+
+  const handleRecipeAdded = (recipe) => {
+    onAddRecipe(recipe); // Send new recipe to App.js
+    setShowAddRecipe(false); // Close the modal
   };
 
   return (
@@ -56,13 +28,7 @@ const Navbar = ({ onSearch, onAddRecipe, query, setQuery, bookmarks }) => {
         </h1>
       </div>
       <form className="search-form" onSubmit={handleSearch}>
-        <input
-          type="text"
-          className="search-input"
-          placeholder="Search over 1,000,000 recipes..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
+        <input type="text" className="search-input" placeholder="Search over 1,000,000 recipes..." value={query} onChange={(e) => setQuery(e.target.value)} />
         <button className="search-button" type="submit">
           <FontAwesomeIcon icon={faSearch} /> Search
         </button>
@@ -76,7 +42,6 @@ const Navbar = ({ onSearch, onAddRecipe, query, setQuery, bookmarks }) => {
         </button>
       </div>
 
-      {/* Bookmarks Dropdown */}
       {showBookmarks && (
         <div className="bookmarks-dropdown">
           <div className="bookmarks-header">
@@ -99,10 +64,10 @@ const Navbar = ({ onSearch, onAddRecipe, query, setQuery, bookmarks }) => {
         </div>
       )}
 
-      {/* Recipe Modal  */}
-      {showAddRecipe && <AddRecipe onClose={() => setShowAddRecipe(false)} onAddRecipe={onAddRecipe} />}
+      {showAddRecipe && <AddRecipe onClose={() => setShowAddRecipe(false)} onAddRecipe={handleRecipeAdded} />}
     </header>
   );
 };
 
 export default Navbar;
+

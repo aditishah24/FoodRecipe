@@ -1,57 +1,4 @@
-/* .recipe-details {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-}
-
-.recipe-image {
-  width: 100%;
-  border-radius: 10px;
-}
-
-.recipe-title {
-  font-size: 1.8rem;
-  color: #2c3e50;
-  margin: 10px 0;
-}
-
-.recipe-info {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  font-size: 1.2rem;
-  color: #555;
-}
-
-.recipe-ingredients {
-  list-style: none;
-  padding: 0;
-}
-
-.recipe-ingredients li {
-  text-align: left;
-  font-size: 1.1rem;
-  padding: 5px 0;
-}
-
-.instructions {
-  margin-top: 20px;
-  font-size: 1.2rem;
-}
-
-.directions-btn {
-  display: inline-block;
-  background: #007bff;
-  color: white;
-  padding: 10px 20px;
-  text-decoration: none;
-  border-radius: 5px;
-  margin-top: 10px;
-} */
-
 .recipe-details {
-  /* background: #fef9f6; */
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -71,6 +18,7 @@
   border-radius: 12px;
   object-fit: cover;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: block; /* Ensure image is visible */
 }
 
 .recipe-title {
@@ -177,42 +125,10 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Instructions section */
-.instructions-section {
-  margin-top: 30px;
-}
-
-.instructions-text {
-  font-size: 1rem;
-  color: #333;
-  margin-bottom: 15px;
-}
-
-.directions-btn {
-  display: inline-block;
-  background: linear-gradient(to right, #0074cc, #0056a5);
-  color: white;
-  padding: 10px 20px;
-  text-decoration: none;
-  font-size: 1.1rem;
-  font-weight: bold;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: background 0.3s ease;
-}
-
-.directions-btn:hover {
-  background: #0056a5;
-}
-
 /* Responsiveness */
 @media (max-width: 768px) {
   .recipe-info {
     gap: 10px;
-  }
-
-  .ingredients-grid {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   }
 
   .recipe-title {
@@ -223,7 +139,7 @@
 
 @media (max-width: 480px) {
   .recipe-title {
-    font-size: 0.5rem;
+    font-size: 1.2rem;
     padding: 5px;
   }
 
@@ -233,9 +149,5 @@
 
   .adjust-btn {
     padding: 5px 8px;
-  }
-
-  .ingredients-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   }
 }
